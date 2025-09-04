@@ -1,0 +1,691 @@
+:root {
+  --bg: #f6f7f8;
+  --accent: #2b8bf2;
+  --muted: #9aa3ad;
+  --max-width: 920px;
+  --cell-min-h: 96px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+
+body {
+  background: var(--bg);
+  color: #222;
+}
+
+
+
+/* ================= HEADER ================= */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+.title .blue {
+  color: #1e90ff;
+}
+
+.header-right .month-label {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+
+
+/* ================= WEEKDAYS ================= */
+
+.weekdays-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #222;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 6px 0;
+}
+
+.weekdays-header div {
+  padding: 4px 0;
+}
+
+.weekdays-header .sunday {
+  color: #666;
+}
+
+.weekdays-header .saturday {
+  color: #888;
+}
+
+
+
+/* ================= CALENDAR ================= */
+
+.calendar-wrap {
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 120px;
+}
+
+.month {
+  max-width: var(--max-width);
+  margin: 12px auto;
+  padding: 10px 16px 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+.month-label {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 8px 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0px;
+}
+
+.month-grid > div:nth-child(7n + 1) {
+  background-color: #f2f2f2;
+  color: #666;
+}
+
+
+
+/* ================= DAY CELL ================= */
+
+.day-cell {
+  background: white;
+  min-height: var(--cell-min-h);
+  border-radius: 6px;
+  
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  padding: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-num {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.day-outside {
+  opacity: 0.45;
+}
+
+
+
+/* ================= ENTRIES ================= */
+
+.entry-list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.entry-preview {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.entry-preview img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.chips {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #444;
+}
+
+
+
+/* ================= FAB ================= */
+
+.fab {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(43, 139, 242, 0.24);
+  z-index: 50;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+/* ================= MODAL ================= */
+/* BACKDROP */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75); /* darker grey/black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  perspective: 1200px; /* enables 3D space */
+}
+
+/* CARD CONTAINER */
+.carousel {
+  position: relative;
+  width: 90%;
+  max-width: 480px;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* SINGLE CARD */
+.modal-card {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease, opacity 0.45s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ACTIVE CARD (center) */
+.modal-card.active {
+  transform: translateX(0) rotateY(0);
+  opacity: 1;
+  z-index: 2;
+}
+
+/* PREVIOUS CARD (left) */
+.modal-card.prev {
+  transform: translateX(-60%) rotateY(25deg);
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* NEXT CARD (right) */
+.modal-card.next {
+  transform: translateX(60%) rotateY(-25deg);
+  opacity: 0.7;
+  z-index: 1;
+}
+
+/* IMAGE */
+.modal-image {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* TOP BAR */
+.modal-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.modal-close {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* BODY */
+.modal-body {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.chip {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  color: #444;
+}
+
+/* RESPONSIVE */
+@media (max-width: 520px) {
+  .modal-image {
+    height: 240px;
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 520px) {
+  :root {
+    --cell-min-h: 110px;
+  }
+  .modal-image {
+    height: 260px;
+  }
+}
+
+
+
+/* ================= DAYCELL SCOPED ================= */
+
+.dc-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.dc-rating {
+  font-size: 12px;
+  color: #1e90ff;
+  font-weight: bold;
+}
+
+.dc-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.dc-categories {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.dc-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: #444;
+}
+/* EntryModal Component Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.carousel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.modal-card {
+  position: absolute;
+  width: 320px;
+  max-width: 75vw;
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  cursor: pointer;
+  left: 50%;
+  margin-left: -160px;
+}
+
+/* Hide cards that are not active, prev, or next */
+.modal-card:not(.active):not(.prev):not(.next) {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.modal-card.active {
+  transform: translateX(0) scale(1);
+  z-index: 3;
+  opacity: 1;
+  cursor: default;
+}
+
+.modal-card.prev {
+  transform: translateX(-250px) scale(0.9);
+  z-index: 2;
+  opacity: 0.4;
+}
+
+.modal-card.next {
+  transform: translateX(250px) scale(0.9);
+  z-index: 2;
+  opacity: 0.4;
+}
+
+.modal-card.hidden-left {
+  transform: translateX(-450px) scale(0.8);
+  z-index: 1;
+  opacity: 0.2;
+}
+
+.modal-card.hidden-right {
+  transform: translateX(450px) scale(0.8);
+  z-index: 1;
+  opacity: 0.2;
+}
+
+/* Close button - positioned outside the card */
+.modal-close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.modal-close:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+  transform: scale(1.1);
+}
+
+/* Image Section - takes most of the card space */
+.modal-image-container {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.modal-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Content Section - compact layout */
+.modal-content {
+  padding: 16px 18px;
+  background-color: white;
+}
+
+/* Info line - date, day, rating, tags all in one horizontal line */
+.modal-info-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.modal-date-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.modal-date {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+}
+
+.modal-day {
+  font-size: 12px;
+  color: #999;
+  font-weight: 400;
+  margin: 0;
+}
+
+.modal-rating-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-rating {
+  display: flex;
+  align-items: center;
+}
+
+.modal-rating .stars {
+  color: #22d3ee;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.modal-tags {
+  display: flex;
+  gap: 4px;
+}
+
+.modal-tag {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+/* Tag Colors */
+.modal-tag.W { background-color: #8b5cf6; }
+.modal-tag.DC { background-color: #06b6d4; }
+.modal-tag.P { background-color: #f59e0b; }
+.modal-tag.H { background-color: #10b981; }
+.modal-tag.S { background-color: #ef4444; }
+.modal-tag.D { background-color: #6366f1; }
+.modal-tag.M { background-color: #ec4899; }
+
+/* Description */
+.modal-description {
+  margin: 0 0 12px 0;
+  color: #333;
+  line-height: 1.4;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: left;
+}
+
+/* Page Indicator */
+.page-indicator {
+  text-align: center;
+  margin: 0;
+  font-size: 11px;
+  color: #999;
+  font-weight: 500;
+}
+
+/* View Full Post Section */
+.modal-footer {
+  background-color: white;
+  border-top: 1px solid #f0f0f0;
+}
+
+.view-full-post {
+  width: 100%;
+  padding: 14px 0;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.view-full-post:hover {
+  color: #333;
+  background-color: #fafafa;
+}
+
+/* Navigation Arrows - Hidden for touch-only interface */
+.carousel-nav {
+  display: none;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .modal-card {
+    width: 300px;
+    max-width: 80vw;
+    margin-left: -150px;
+  }
+  
+  .modal-card.prev {
+    transform: translateX(-200px) scale(0.85);
+    opacity: 0.3;
+  }
+  
+  .modal-card.next {
+    transform: translateX(200px) scale(0.85);
+    opacity: 0.3;
+  }
+  
+  .modal-image-container {
+    height: 400px;
+  }
+  
+  .modal-content {
+    padding: 14px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-card {
+    width: 280px;
+    max-width: 85vw;
+    margin-left: -140px;
+  }
+  
+  .modal-card.prev {
+    transform: translateX(-220px) scale(0.8);
+    opacity: 0.25;
+  }
+  
+  .modal-card.next {
+    transform: translateX(220px) scale(0.8);
+    opacity: 0.25;
+  }
+  
+  .modal-image-container {
+    height: 350px;
+  }
+}

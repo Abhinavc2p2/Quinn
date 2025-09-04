@@ -1,12 +1,35 @@
-# React + Vite
+# 📅 Infinite Scroll Calendar – My Hair Diary
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React-based infinite scroll calendar app where users can view daily entries, open them in a full-screen modal, and swipe through entries with smooth transitions. Optimized for mobile and desktop.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
+- Infinite vertical scrolling through months
+- Sticky header that updates when month changes
+- Weekly day headers aligned with the calendar grid
+- Full-screen modal view for entries with swipe navigation
+- Responsive design (mobile-first)
+- Darkened backdrop for modal focus
+- Built with **React, date-fns, CSS Grid**
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+- **Frontend:** React (Hooks, Functional Components)
+- **Styling:** Custom CSS
+- **Utilities:** date-fns
+- **Gestures:** react-swipeable
+
+---
+
+## 📦 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YOUR_USER/YOUR_REPO.git
+cd YOUR_REPO
+npm install
+npm start/npm run dev
+

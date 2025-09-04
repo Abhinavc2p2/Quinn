@@ -1,0 +1,30 @@
+/* Sticky week header */
+.weekhead {
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 50;
+}
+
+/* Sunday lighter */
+.weekhead div:first-child {
+  color: #aaa;
+}
+
+/* Tooltip that shows when you stop scrolling */
+.day-tooltip {
+  position: absolute;
+  top: 50px; /* below the header */
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.day-tooltip.show {
+  opacity: 1;
+}
