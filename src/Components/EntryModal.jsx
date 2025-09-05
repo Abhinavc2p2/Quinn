@@ -91,9 +91,11 @@ export default function EntryModal({ entries = [], initialIndex = 0, onClose }) 
 
   return (
     <div className="modal-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      
       <div className="carousel" {...swipeHandlers}>
         {/* Single close button outside and above the carousel */}
-        <button 
+        
+<button 
           className="modal-close"
           onClick={(e) => {
             e.stopPropagation();
@@ -102,7 +104,6 @@ export default function EntryModal({ entries = [], initialIndex = 0, onClose }) 
         >
           ✕
         </button>
-
         {displayEntries.map((entry, i) => {
           let cardClass = "modal-card";
           if (i === index) {

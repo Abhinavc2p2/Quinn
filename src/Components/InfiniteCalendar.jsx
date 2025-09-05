@@ -1,35 +1,49 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { startOfMonth, addMonths } from "date-fns";
-import Month from "./Month.jsx";
+import { addDays, subDays, startOfDay, getDay, format } from "date-fns";
 import EntryModal from "./EntryModal.jsx";
 import Header from "./Header.jsx";
-import useVisibleMonth from "../hooks/useVisibleMonth";
-import { parseDDMMYYYY, isoYMD, formatMonthId } from "../utils/dateUtils";
+import { parseDDMMYYYY, isoYMD } from "../utils/dateUtils";
 import rawData from "../data/data.json";
+import DayCell from "./DayCell.jsx";
 import "../index.css";
 
-
-
-function initialMonths(centerDate = new Date(), radius = 6) {
+function initialDays(centerDate = new Date(), radius = 90) {
+  // Start from the most recent Sunday to align with weekday header
+  const center = startOfDay(centerDate);
+  const startDate = subDays(center, radius);
+  
+  // Find the Sunday before startDate
+  const dayOfWeek = getDay(startDate); // 0 = Sunday
+  const alignedStart = subDays(startDate, dayOfWeek);
+  
+  const totalDays = radius * 2 + 1;
+  // Round up to complete weeks
+  const weeksNeeded = Math.ceil(totalDays / 7);
+  const daysToGenerate = weeksNeeded * 7;
+  
   const arr = [];
-  for (let i = -radius; i <= radius; i++) {
-    arr.push(startOfMonth(addMonths(centerDate, i)));
+  for (let i = 0; i < daysToGenerate; i++) {
+    arr.push(addDays(alignedStart, i));
   }
   return arr;
 }
 
 export default function InfiniteCalendar() {
   const containerRef = useRef(null);
-  const [months, setMonths] = useState(() => initialMonths(new Date(), 6));
-  const visibleId = useVisibleMonth(containerRef, [months]); // re-run when months change
+  const [days, setDays] = useState(() => initialDays(new Date(), 90));
+  
+  // Track visible month for header
+  const [visibleMonth, setVisibleMonth] = useState(format(new Date(), 'yyyy-MM'));
 
-  // prepare entries: parse dates and build flat & map by iso
+  // prepare entries
   const [entries, setEntries] = useState([]);
   useEffect(() => {
-    const parsed = rawData.map((e, idx) => {
-      const d = parseDDMMYYYY(e.date);
-      return { ...e, _parsed: d, _iso: isoYMD(d), _id: idx };
-    }).sort((a,b) => a._parsed - b._parsed);
+    const parsed = rawData
+      .map((e, idx) => {
+        const d = parseDDMMYYYY(e.date);
+        return { ...e, _parsed: d, _iso: isoYMD(d), _id: idx };
+      })
+      .sort((a, b) => a._parsed - b._parsed);
     setEntries(parsed);
   }, []);
 
@@ -45,48 +59,72 @@ export default function InfiniteCalendar() {
   // modal state
   const [modalIndex, setModalIndex] = useState(null);
 
-  // infinite scroll behavior
+  // Track scroll position to update visible month
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    let ticking = false;
 
+    function updateVisibleMonth() {
+      const { scrollTop, clientHeight } = el;
+      const viewportCenter = scrollTop + clientHeight / 2;
+      
+      // Find which day is in the center of viewport
+      const dayElements = el.querySelectorAll('.day-cell');
+      let centerDay = null;
+      
+      dayElements.forEach((dayEl) => {
+        const rect = dayEl.getBoundingClientRect();
+        const elementTop = rect.top + scrollTop;
+        const elementBottom = elementTop + rect.height;
+        
+        if (elementTop <= viewportCenter && elementBottom >= viewportCenter) {
+          const dateStr = dayEl.getAttribute('data-date');
+          if (dateStr) {
+            centerDay = new Date(dateStr);
+          }
+        }
+      });
+      
+      if (centerDay) {
+        const monthId = format(centerDay, 'yyyy-MM');
+        setVisibleMonth(monthId);
+      }
+    }
+
+    let ticking = false;
     function onScroll() {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
         const { scrollTop, clientHeight, scrollHeight } = el;
+        
+        // Update visible month
+        updateVisibleMonth();
 
-        // prepend when near top
+        // Extend days when near edges
         if (scrollTop < 300) {
-          const first = months[0];
+          const first = days[0];
           const toAdd = [];
-          for (let i = 3; i >= 1; i--) {
-            toAdd.push(startOfMonth(addMonths(first, -i)));
+          // Add complete weeks (7 days at a time)
+          for (let i = 21; i >= 1; i--) {
+            toAdd.push(subDays(first, i));
           }
           const prevHeight = el.scrollHeight;
-          setMonths((prev) => {
-            const next = [...toAdd, ...prev];
-            return next.length > 40 ? next.slice(0, 40) : next;
-          });
-          // after DOM update adjust scroll top to avoid jump
+          setDays((prev) => [...toAdd, ...prev]);
           requestAnimationFrame(() => {
             const delta = el.scrollHeight - prevHeight;
             el.scrollTop = scrollTop + delta;
           });
         }
 
-        // append when near bottom
         if (scrollTop + clientHeight > scrollHeight - 300) {
-          const last = months[months.length - 1];
+          const last = days[days.length - 1];
           const toAdd = [];
-          for (let i = 1; i <= 3; i++) {
-            toAdd.push(startOfMonth(addMonths(last, i)));
+          // Add complete weeks (7 days at a time)
+          for (let i = 1; i <= 21; i++) {
+            toAdd.push(addDays(last, i));
           }
-          setMonths((prev) => {
-            const next = [...prev, ...toAdd];
-            return next.length > 40 ? next.slice(next.length - 40) : next;
-          });
+          setDays((prev) => [...prev, ...toAdd]);
         }
 
         ticking = false;
@@ -94,10 +132,14 @@ export default function InfiniteCalendar() {
     }
 
     el.addEventListener("scroll", onScroll, { passive: true });
+    
+    // Initial month detection
+    updateVisibleMonth();
+    
     return () => el.removeEventListener("scroll", onScroll);
-  }, [months]);
+  }, [days]);
 
-  // open modal: find flat index in entries
+  // open modal
   function openEntry(entry) {
     const idx = entries.findIndex((e) => e._id === entry._id);
     if (idx >= 0) setModalIndex(idx);
@@ -109,28 +151,36 @@ export default function InfiniteCalendar() {
 
   return (
     <div>
-      <Header monthId={visibleId} />
-      
+      <Header monthId={visibleMonth} />
+
       <div ref={containerRef} className="calendar-wrap">
-        
-        {months.map((mDate) => {
-          const id = formatMonthId(mDate);
-          return (
-            <Month
-              key={id}
-              monthDate={mDate}
-              monthId={id}
-              entriesByIso={entriesByIso}
-              onOpenEntry={openEntry}
-            />
-          );
-        })}
+        <div className="continuous-calendar-grid">
+          {days.map((d) => {
+            const iso = isoYMD(d);
+            const list = entriesByIso[iso] || [];
+            return (
+              <DayCell
+                key={iso}
+                date={d}
+                inMonth={true}
+                entries={list}
+                onOpenEntry={openEntry}
+              />
+            );
+          })}
+        </div>
       </div>
 
-      <button className="fab" title="Add" aria-label="Add">＋</button>
+      <button className="fab" title="Add" aria-label="Add">
+        ＋
+      </button>
 
       {modalIndex !== null && (
-        <EntryModal entries={entries} initialIndex={modalIndex} onClose={closeModal} />
+        <EntryModal
+          entries={entries}
+          initialIndex={modalIndex}
+          onClose={closeModal}
+        />
       )}
     </div>
   );

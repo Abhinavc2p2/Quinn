@@ -2,9 +2,13 @@ import React from "react";
 
 export default function DayCell({ date, inMonth, entries = [], onOpenEntry }) {
   const dayNum = date.getDate();
+  const iso = date.toISOString().slice(0, 10);
 
   return (
-    <div className={`day-cell ${!inMonth ? "day-outside" : ""}`}>
+    <div 
+      className={`day-cell ${!inMonth ? "day-outside" : ""}`}
+      data-date={iso}
+    >
       <div className="day-num">{dayNum}</div>
 
       {entries.length > 0 && (
