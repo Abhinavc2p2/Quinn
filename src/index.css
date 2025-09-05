@@ -210,6 +210,10 @@ body {
   padding: 20px;
   perspective: 800px;
 }
+/* Shade Sunday column */
+.continuous-calendar-grid .day-cell:nth-child(7n+1) {
+  background: #f3f4f6; /* light gray */
+}
 
 .carousel {
   position: relative;
