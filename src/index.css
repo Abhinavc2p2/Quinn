@@ -6,9 +6,7 @@
   --cell-min-h: 96px;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html, body, #root {
   height: 100%;
@@ -39,12 +37,7 @@ body {
   align-items: center;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
+.header-left { display: flex; align-items: center; gap: 8px; }
 .back-btn {
   background: transparent;
   border: none;
@@ -52,18 +45,9 @@ body {
   cursor: pointer;
 }
 
-.title {
-  font-weight: 600;
-  font-size: 16px;
-  color: #333;
-}
+.title { font-weight: 600; font-size: 16px; color: #333; }
 .title .blue { color: #1e90ff; }
-
-.header-right .month-label {
-  font-size: 15px;
-  font-weight: 500;
-  color: #333;
-}
+.header-right .month-label { font-size: 15px; font-weight: 500; color: #333; }
 
 /* ================= WEEKDAYS ================= */
 .weekdays-header {
@@ -78,7 +62,6 @@ body {
   color: #222;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  gap: 0;
 }
 .weekdays-header div { padding: 4px 0; }
 .weekdays-header .sunday { color: #666; }
@@ -92,7 +75,6 @@ body {
   padding-bottom: 120px;
 }
 
-.month-grid,
 .continuous-calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -102,21 +84,9 @@ body {
   padding: 0 16px;
 }
 
-.month { display: none; } /* hidden in continuous view */
-
-.month-divider,
-.month-label {
-  grid-column: 1 / -1;
-  text-align: center;
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--muted);
-  margin: 8px 0;
-  background: var(--bg);
-  padding: 8px 0;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+/* Shade Sunday column */
+.continuous-calendar-grid .day-cell:nth-child(7n+1) {
+  background: #f3f4f6;
 }
 
 /* Day Cells */
@@ -164,8 +134,8 @@ body {
 }
 
 .entry-preview img {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -210,10 +180,6 @@ body {
   padding: 20px;
   perspective: 800px;
 }
-/* Shade Sunday column */
-.continuous-calendar-grid .day-cell:nth-child(7n+1) {
-  background: #f3f4f6; /* light gray */
-}
 
 .carousel {
   position: relative;
@@ -227,7 +193,7 @@ body {
 
 .modal-card {
   position: absolute;
-  width: 320px;
+  width: 280px;
   max-width: 75vw;
   background: #fff;
   border-radius: 16px;
@@ -236,7 +202,7 @@ body {
   transition: all 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
   cursor: pointer;
   left: 50%;
-  margin-left: -160px;
+  margin-left: -140px;
 }
 .modal-card.active {
   transform: translateX(0) scale(1);
@@ -245,22 +211,22 @@ body {
   cursor: default;
 }
 .modal-card.prev {
-  transform: translateX(-250px) scale(0.9);
+  transform: translateX(-220px) scale(0.9);
   z-index: 2;
   opacity: 0.4;
 }
 .modal-card.next {
-  transform: translateX(250px) scale(0.9);
+  transform: translateX(220px) scale(0.9);
   z-index: 2;
   opacity: 0.4;
 }
 .modal-card.hidden-left {
-  transform: translateX(-450px) scale(0.8);
+  transform: translateX(-400px) scale(0.8);
   z-index: 1;
   opacity: 0.2;
 }
 .modal-card.hidden-right {
-  transform: translateX(450px) scale(0.8);
+  transform: translateX(400px) scale(0.8);
   z-index: 1;
   opacity: 0.2;
 }
@@ -272,8 +238,8 @@ body {
 /* Close Button */
 .modal-close {
   position: absolute;
-  top: -15px;
-  right: -15px;
+  top: 10px;
+  right: 550px;
   background: rgba(0,0,0,0.7);
   border: none;
   font-size: 16px;
@@ -298,7 +264,7 @@ body {
 /* Modal Content */
 .modal-image-container {
   position: relative;
-  height: 500px;
+  height: 360px;
   overflow: hidden;
   background: #f8f9fa;
 }
@@ -309,10 +275,7 @@ body {
   display: block;
 }
 
-.modal-content {
-  padding: 16px 18px;
-  background: #fff;
-}
+.modal-content { padding: 16px 18px; background: #fff; }
 .modal-info-line {
   display: flex;
   justify-content: space-between;
@@ -387,7 +350,8 @@ body {
 }
 .dc-rating { font-size: 12px; color: #1e90ff; font-weight: bold; }
 .dc-img {
-  width: 60px; height: 60px;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
   border-radius: 6px;
 }
@@ -401,10 +365,10 @@ body {
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
-  .modal-card { width: 300px; max-width: 80vw; margin-left: -150px; }
+  .modal-card { width: 160px; max-width: 80vw; margin-left: -130px; }
   .modal-card.prev { transform: translateX(-200px) scale(0.85); opacity: 0.3; }
   .modal-card.next { transform: translateX(200px) scale(0.85); opacity: 0.3; }
-  .modal-image-container { height: 400px; }
+  .modal-image-container { height: 300px; }
   .modal-content { padding: 14px 16px; }
 }
 
@@ -413,12 +377,17 @@ body {
   .continuous-calendar-grid { padding: 0 8px; }
   .weekdays-header { padding: 6px 8px; }
   .continuous-calendar-grid .day-cell { margin: 0.5px; }
-  .modal-image { height: 260px; }
+
+  .entry-preview img,
+  .dc-img { width: 40px; height: 40px; }
+
+  .modal-card { width: 100px; max-width: 85vw; margin-left: -120px; }
+  .modal-image-container { height: 240px; }
 }
 
 @media (max-width: 480px) {
-  .modal-card { width: 280px; max-width: 85vw; margin-left: -140px; }
-  .modal-card.prev { transform: translateX(-220px) scale(0.8); opacity: 0.25; }
-  .modal-card.next { transform: translateX(220px) scale(0.8); opacity: 0.25; }
-  .modal-image-container { height: 350px; }
+  .modal-card { width: 220px; max-width: 90vw; margin-left: -110px; }
+  .modal-card.prev { transform: translateX(-180px) scale(0.8); opacity: 0.25; }
+  .modal-card.next { transform: translateX(180px) scale(0.8); opacity: 0.25; }
+  .modal-image-container { height: 200px; }
 }
